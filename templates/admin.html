@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">🔧 Admin Panel</h2>
+                <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+            </div>
+            <div class="card-body">
+                <!-- Game State Controls -->
+                <div class="alert alert-info">
+                    <h4>Game Status</h4>
+                    <p><strong>Current Phase:</strong> 
+                        <span class="badge bg-primary">{{ game_state.phase.title() if game_state else 'Not Set' }}</span>
+                    </p>
+                    
+                    {% if game_state and game_state.phase == 'submission' %}
+                        <p>Players are currently submitting their number guesses.</p>
+                        <form method="POST" action="{{ url_for('advance_phase') }}" style="display: inline;">
+                            <button type="submit" class="btn btn-warning" 
+                                    {% if not players %}disabled{% endif %}>
+                                {% if not players %}No Submissions Yet{% else %}Advance to Results{% endif %}
+                            </button>
+                        </form>
+                    {% elif game_state and game_state.phase == 'results' %}
+                        <p>Results calculated. Winner can now select draft position.</p>
+                        <form method="POST" action="{{ url_for('advance_phase') }}" style="display: inline;">
+                            <button type="submit" class="btn btn-success">Advance to Draft Selection</button>
+                        </form>
+                    {% elif game_state and game_state.phase == 'selecting' %}
+                        <p>Draft position selection in progress.</p>
+                        <a href="{{ url_for('draft_selection') }}" class="btn btn-primary" style="margin-right: 10px;">View Draft Selection</a>
+                        <form method="POST" action="{{ url_for('advance_phase') }}" style="display: inline;">
+                            <button type="submit" class="btn btn-info">Reset for New Game</button>
+                        </form>
+                    {% elif game_state and game_state.phase == 'completed' %}
+                        <p>Draft order complete! All positions selected.</p>
+                        <form method="POST" action="{{ url_for('reset_game') }}" style="display: inline;">
+                            <button type="submit" class="btn btn-success">Start New Game</button>
+                        </form>
+                    {% endif %}
+                    
+                    <form method="POST" action="{{ url_for('reset_game') }}" style="display: inline; margin-left: 10px;">
+                        <button type="submit" class="btn btn-danger" 
+                                onclick="return confirm('Are you sure? This will delete all data!')">
+                            Complete Reset
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Simulation Controls -->
+                <div class="alert alert-warning">
+                    <h4>🧪 Testing & Simulation</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6>Custom Simulation</h6>
+                            <form method="POST" action="{{ url_for('simulate_game') }}">
+                                <div class="input-group mb-2">
+                                    <input type="number" name="num_players" class="form-control" 
+                                           value="8" min="3" max="30" placeholder="# players">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        Create Simulation
+                                    </button>
+                                </div>
+                            </form>
+                            <small class="form-text text-muted">Creates dummy players with random guesses (3-30 players supported)</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6>Quick Test</h6>
+                            <form method="POST" action="{{ url_for('quick_test') }}" style="display: inline;">
+                                <button type="submit" class="btn btn-outline-success">
+                                    🚀 Quick Test Scenario
+                                </button>
+                            </form>
+                            <small class="form-text text-muted">5 players, pre-calculated winner</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Submissions</h5>
+                                <h3 class="text-primary">{{ players|length }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Average Guess</h5>
+                                <h3 class="text-info">{{ "%.1f"|format(average) if average else "N/A" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Target (2/3 × Avg)</h5>
+                                <h3 class="text-warning">{{ "%.2f"|format(target) if target else "N/A" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Winner</h5>
+                                <h3 class="text-success">{{ winner.name if winner else "TBD" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submissions Table -->
+                {% if players %}
+                <h4>All Submissions</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Guess</th>
+                                <th>Difference from Target</th>
+                                <th>Timestamp</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for player in players %}
+                            <tr {% if winner and player.id == winner.id %}class="table-success"{% endif %}>
+                                <td>
+                                    {{ player.name }}
+                                    {% if winner and player.id == winner.id %}
+                                        <span class="badge bg-success">WINNER</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ player.email }}</td>
+                                <td><strong>{{ player.guess }}</strong></td>
+                                <td>
+                                    {% if target %}
+                                        {{ "%.2f"|format(abs(player.guess - target)) }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td>{{ player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                                <td>
+                                    {% if player.draft_position %}
+                                        <span class="badge bg-info">Draft Pos: {{ player.draft_position }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Pending</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-secondary">
+                    <h4>No submissions yet</h4>
+                    <p>Share the main page link with your league members to start collecting guesses.</p>
+                    <p><strong>Game URL:</strong> <code>http://localhost:5001</code></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

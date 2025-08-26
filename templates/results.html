@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2 class="mb-0">🎉 Game Results</h2>
+            </div>
+            <div class="card-body">
+                {% if winner %}
+                <div class="alert alert-success text-center">
+                    <h3>🏆 Winner: {{ winner.name }}</h3>
+                    <p><strong>Winning guess:</strong> {{ winner.guess }}</p>
+                    <p><strong>Target number:</strong> {{ "%.2f"|format(target) }} (2/3 × {{ "%.2f"|format(average) }})</p>
+                    <p><strong>Difference:</strong> {{ "%.2f"|format(abs(winner.guess - target)) }}</p>
+                </div>
+
+                <div class="alert alert-info">
+                    <h4>Next Step: Draft Position Selection</h4>
+                    <p>{{ winner.name }} gets to pick their draft position first!</p>
+                    <p>Then everyone else will pick in order of how close they were to the target.</p>
+                </div>
+                {% endif %}
+
+                <!-- Draft Order Section -->
+                {% if draft_positions_selected %}
+                <div class="card mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">🏈 Final Fantasy Football Draft Order</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Draft Position</th>
+                                        <th>Player Name</th>
+                                        <th>Original Guess</th>
+                                        <th>Distance from Target</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for player in draft_order %}
+                                    <tr class="{% if player.id == winner.id %}table-warning{% endif %}">
+                                        <td><strong>{{ player.draft_position }}</strong></td>
+                                        <td>
+                                            {{ player.name }}
+                                            {% if player.id == winner.id %}
+                                                <span class="badge bg-warning text-dark ms-2">Winner</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ player.guess }}</td>
+                                        <td>{{ "%.1f"|format((player.guess - target)|abs) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <h4>All Submissions:</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Place</th>
+                                <th>Name</th>
+                                <th>Guess</th>
+                                <th>Distance from Target</th>
+                                {% if draft_positions_selected %}
+                                <th>Draft Position</th>
+                                {% endif %}
+                                <th>Submitted</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for player in players %}
+                            <tr class="{% if winner and player.id == winner.id %}table-success{% endif %}">
+                                <td>
+                                    {% if loop.index == 1 %}
+                                        🏆 1st
+                                    {% elif loop.index == 2 %}
+                                        🥈 2nd
+                                    {% elif loop.index == 3 %}
+                                        🥉 3rd
+                                    {% else %}
+                                        {{ loop.index }}{% if loop.index == 4 %}th{% elif loop.index == 5 %}th{% elif loop.index == 6 %}th{% elif loop.index == 7 %}th{% elif loop.index == 8 %}th{% elif loop.index == 9 %}th{% elif loop.index == 10 %}th{% elif loop.index == 11 %}th{% elif loop.index == 12 %}th{% elif loop.index == 13 %}th{% elif loop.index == 14 %}th{% elif loop.index == 15 %}th{% else %}th{% endif %}
+                                    {% endif %}
+                                </td>
+                                <td>{{ player.name }}</td>
+                                <td>{{ player.guess }}</td>
+                                <td>
+                                    {% if target %}
+                                        {{ "%.2f"|format(abs(player.guess - target)) }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                {% if draft_positions_selected %}
+                                <td>
+                                    {% if player.draft_position %}
+                                        <span class="badge bg-primary">{{ player.draft_position }}</span>
+                                    {% else %}
+                                        <span class="text-muted">Not selected</span>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
+                                <td>{{ player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

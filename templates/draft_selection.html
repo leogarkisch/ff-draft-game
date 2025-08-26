@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2 class="mb-0">🏆 Draft Position Selection</h2>
+            </div>
+            <div class="card-body">
+                {% if winner %}
+                <div class="alert alert-success text-center">
+                    <h4>🎉 Congratulations {{ winner.name }}!</h4>
+                    <p>You won with a guess of <strong>{{ winner.guess }}</strong></p>
+                    <p>Target was <strong>{{ "%.2f"|format(target) }}</strong> (2/3 × {{ "%.2f"|format(average) }})</p>
+                    <p>You get to pick your draft position first!</p>
+                </div>
+                {% endif %}
+
+                <!-- Draft Board -->
+                <div class="row">
+                    <div class="col-md-8 mb-4">
+                        <h4>Draft Order Selection</h4>
+                        <div class="draft-board">
+                            {% for pos in range(1, total_players + 1) %}
+                            <div class="draft-position {% if pos in taken_positions %}taken{% else %}available{% endif %}" 
+                                 data-position="{{ pos }}">
+                                <div class="position-number">{{ pos }}</div>
+                                {% if pos in taken_positions %}
+                                    <div class="player-name">{{ taken_positions[pos] }}</div>
+                                {% else %}
+                                    <div class="available-text">Available</div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h4>Selection Order</h4>
+                        <div class="selection-queue">
+                            {% for player in selection_order %}
+                            <div class="queue-item {% if loop.index0 == current_picker_index %}current{% elif player.draft_position %}completed{% endif %}">
+                                <div class="queue-number">{{ loop.index }}</div>
+                                <div class="queue-info">
+                                    <div class="player-name">{{ player.name }}</div>
+                                    <div class="player-guess">Guess: {{ player.guess }}</div>
+                                    <div class="player-distance">Distance from target: {{ "%.1f"|format((player.guess - target)|abs) }}</div>
+                                    {% if player.draft_position %}
+                                        <div class="selected-position">Selected: #{{ player.draft_position }}</div>
+                                    {% elif loop.index0 == current_picker_index %}
+                                        <div class="current-picker">Your turn!</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Picker Controls -->
+                {% if current_picker %}
+                <div class="current-picker-controls mt-4">
+                    <div class="alert alert-primary">
+                        <h5>{{ current_picker.name }}, select your draft position:</h5>
+                        <form method="POST" action="{{ url_for('select_draft_position') }}">
+                            <input type="hidden" name="player_id" value="{{ current_picker.id }}">
+                            <div class="btn-group" role="group">
+                                {% for pos in range(1, total_players + 1) %}
+                                    {% if pos not in taken_positions %}
+                                    <button type="submit" name="position" value="{{ pos }}" 
+                                            class="btn btn-outline-primary">
+                                        Pick #{{ pos }}
+                                    </button>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Completion -->
+                {% if all_selected %}
+                <div class="alert alert-success text-center">
+                    <h4>🎉 Draft Order Complete!</h4>
+                    <p>All positions have been selected. Here's your final draft order:</p>
+                </div>
+                
+                <!-- Final Draft Order Display -->
+                <div class="card mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">🏈 Final Fantasy Football Draft Order</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Draft Position</th>
+                                            <th>Player Name</th>
+                                            <th>Original Guess</th>
+                                            <th>Distance from Target</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for pos in range(1, total_players + 1) %}
+                                        {% for player in players %}
+                                        {% if player.draft_position == pos %}
+                                        <tr class="{% if player.id == winner.id %}table-warning{% endif %}">
+                                            <td><strong>{{ pos }}</strong></td>
+                                            <td>
+                                                {{ player.name }}
+                                                {% if player.id == winner.id %}
+                                                    <span class="badge bg-warning text-dark ms-2">Winner</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ player.guess }}</td>
+                                            <td>{{ "%.1f"|format((player.guess - target)|abs) }}</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Summary Stats -->
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h5>Game Summary</h5>
+                                        <p><strong>Target Number:</strong> {{ "%.2f"|format(target) }}</p>
+                                        <p><strong>Average Guess:</strong> {{ "%.2f"|format(average) }}</p>
+                                        <p><strong>Winner:</strong> {{ winner.name }} ({{ winner.guess }})</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h5>Next Steps</h5>
+                                        <p>Use this draft order for your fantasy football league!</p>
+                                        <p class="text-muted">The order is based on proximity to the 2/3 average game theory calculation.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                <a href="{{ url_for('index') }}" class="btn btn-secondary">Start New Game</a>
+                                <a href="{{ url_for('admin') }}" class="btn btn-primary">Admin Panel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center mt-3">
+                    <p class="text-muted">Waiting for all players to select their draft positions...</p>
+                    <a href="{{ url_for('admin') }}" class="btn btn-secondary">Back to Admin</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.draft-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .draft-board {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+    }
+}
+
+.draft-position {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media (min-width: 768px) {
+    .draft-position {
+        padding: 15px;
+        min-height: 100px;
+    }
+}
+
+.draft-position.available {
+    border-color: #28a745;
+    background-color: #f8fff9;
+    cursor: pointer;
+}
+
+.draft-position.available:hover {
+    background-color: #e8f5e8;
+    transform: translateY(-2px);
+}
+
+.draft-position.taken {
+    border-color: #6c757d;
+    background-color: #f8f9fa;
+}
+
+.position-number {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+@media (min-width: 768px) {
+    .position-number {
+        font-size: 24px;
+    }
+}
+
+.player-name {
+    font-size: 11px;
+    color: #666;
+    margin-top: 4px;
+    line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+    .player-name {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+}
+
+.available-text {
+    font-size: 10px;
+    color: #28a745;
+    margin-top: 4px;
+}
+
+@media (min-width: 768px) {
+    .available-text {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+}
+
+.selection-queue {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.queue-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.queue-item.current {
+    border-color: #007bff;
+    background-color: #e7f3ff;
+}
+
+.queue-item.completed {
+    border-color: #28a745;
+    background-color: #f8fff9;
+}
+
+.queue-number {
+    font-size: 18px;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.queue-item.completed .queue-number {
+    background-color: #28a745;
+}
+
+.queue-info {
+    flex: 1;
+}
+
+.player-name {
+    font-weight: bold;
+}
+
+.player-guess {
+    font-size: 12px;
+    color: #666;
+}
+
+.player-distance {
+    font-size: 11px;
+    color: #888;
+    font-style: italic;
+}
+
+.selected-position {
+    font-size: 12px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.current-picker {
+    font-size: 12px;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.current-picker-controls {
+    border-top: 2px solid #007bff;
+    padding-top: 20px;
+}
+</style>
+{% endblock %}
