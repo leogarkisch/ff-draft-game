@@ -31,6 +31,16 @@ class Player(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     draft_position = db.Column(db.Integer)
 
+class DeletedPlayer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    original_id = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    guess = db.Column(db.Integer, nullable=False)
+    original_timestamp = db.Column(db.DateTime, nullable=False)
+    deleted_timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    deleted_reason = db.Column(db.String(200))
+
 class GameState(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     phase = db.Column(db.String(20), default='submission')  # submission, results, selecting, completed
@@ -168,6 +178,7 @@ def admin():
         return auth_redirect
     
     players = Player.query.all()
+    deleted_players = DeletedPlayer.query.order_by(DeletedPlayer.deleted_timestamp.desc()).all()
     game_state = GameState.query.first()
     
     if not game_state:
@@ -189,10 +200,39 @@ def admin():
     
     return render_template('admin.html', 
                          players=players, 
+                         deleted_players=deleted_players,
                          game_state=game_state, 
                          average=average, 
                          target=target,
                          winner=winner)
+
+@app.route('/admin/delete_submission/<int:player_id>', methods=['POST'])
+def delete_submission(player_id):
+    # Check authentication first
+    auth_redirect = require_admin_auth()
+    if auth_redirect:
+        return auth_redirect
+    
+    player = Player.query.get_or_404(player_id)
+    reason = request.form.get('reason', 'No reason provided')
+    player_name = player.name  # Store name before deletion
+    
+    # Create a record in deleted players table
+    deleted_player = DeletedPlayer(
+        original_id=player.id,
+        name=player.name,
+        email=player.email,
+        guess=player.guess,
+        original_timestamp=player.timestamp,
+        deleted_reason=reason
+    )
+    
+    db.session.add(deleted_player)
+    db.session.delete(player)
+    db.session.commit()
+    
+    flash(f'Submission by {player_name} has been deleted. Reason: {reason}', 'warning')
+    return redirect(url_for('admin'))
 
 @app.route('/admin/advance_phase', methods=['POST'])
 def advance_phase():
@@ -260,6 +300,7 @@ def reset_game():
     
     # Clear all data and start fresh
     Player.query.delete()
+    DeletedPlayer.query.delete()
     GameState.query.delete()
     
     # Create fresh game state
@@ -281,6 +322,7 @@ def simulate_game():
     
     # Clear existing data
     Player.query.delete()
+    DeletedPlayer.query.delete()
     GameState.query.delete()
     
     # Create fresh game state
@@ -356,6 +398,7 @@ def quick_test():
     
     # Clear existing data
     Player.query.delete()
+    DeletedPlayer.query.delete()
     GameState.query.delete()
     
     # Create game state in results phase with pre-calculated winner

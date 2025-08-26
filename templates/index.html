@@ -23,6 +23,17 @@
                     <p><strong>Status:</strong> 
                         <span class="badge bg-success">Submissions Open</span>
                     </p>
+                    
+                    <!-- Countdown Timer -->
+                    <div class="card mt-3 mb-3">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">⏰ Submission Deadline</h6>
+                            <p class="mb-2">Thursday, August 28th at 12:00 PM ET</p>
+                            <div id="countdown" class="fs-4 fw-bold text-primary">
+                                Loading countdown...
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <form method="POST" action="{{ url_for('submit_guess') }}">

@@ -1,5 +1,42 @@
 // Additional JavaScript functionality for the webapp
 
+// Countdown Timer
+function updateCountdown() {
+    // Set the deadline: Thursday, August 28th, 2025 at 12:00 PM ET
+    const deadline = new Date('2025-08-28T12:00:00-04:00').getTime(); // ET timezone
+    const now = new Date().getTime();
+    const timeLeft = deadline - now;
+    
+    const countdownElement = document.getElementById('countdown');
+    if (!countdownElement) return;
+    
+    if (timeLeft > 0) {
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        
+        let countdownText = '';
+        if (days > 0) {
+            countdownText += `${days}d `;
+        }
+        countdownText += `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        countdownElement.innerHTML = countdownText;
+        countdownElement.className = 'fs-4 fw-bold text-primary';
+    } else {
+        countdownElement.innerHTML = 'Deadline Reached!';
+        countdownElement.className = 'fs-4 fw-bold text-danger';
+    }
+}
+
+// Update countdown every second
+if (document.getElementById('countdown')) {
+    updateCountdown(); // Initial call
+    setInterval(updateCountdown, 1000);
+}
+
+// Existing validation code
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-dismiss alerts after 5 seconds
     const alerts = document.querySelectorAll('.alert-dismissible');
