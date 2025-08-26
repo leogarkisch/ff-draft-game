@@ -509,6 +509,12 @@ def select_draft_position():
         return redirect(url_for('draft_selection'))
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    try:
+        with app.app_context():
+            db.create_all()
+            print("Database initialized successfully")
+        print("Starting Flask app...")
+        app.run(debug=True, host='0.0.0.0', port=5001)
+    except Exception as e:
+        print(f"Error starting app: {e}")
+        raise
