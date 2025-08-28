@@ -20,6 +20,17 @@
                     </ul>
                                 <p><strong>Example:</strong> If Alice guesses 300, Bob guesses 600, Caroline guesses 900, and Doug guesses 450, 
             the average is 562.5. Two-thirds of 562.5 is 375. Doug's guess of 450 is closest to 375, so Doug wins and gets to pick his draft position first!</p>
+            
+            <p><strong>Then the draft order selection works like this:</strong></p>
+            <ul class="small">
+                <li><strong>1st to pick:</strong> Doug (winner) - closest to target (375)</li>
+                <li><strong>2nd to pick:</strong> Alice (guess: 300) - second closest to target</li>  
+                <li><strong>3rd to pick:</strong> Bob (guess: 600) - third closest to target</li>
+                <li><strong>4th to pick:</strong> Caroline (guess: 900) - furthest from target</li>
+            </ul>
+            
+            <p class="small text-muted">So if Doug picks draft position #3, then Alice gets to choose from the remaining positions (1, 2, 4, etc.), 
+            followed by Bob, and finally Caroline gets whatever's left.</p>
                     <p><strong>Status:</strong> 
                         <span class="badge bg-success">Submissions Open</span>
                     </p>
