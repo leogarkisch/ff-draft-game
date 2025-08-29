@@ -1,0 +1,194 @@
+{
+  "timestamp": "2025-08-28T21:01:03.635473",
+  "players": [
+    {
+      "id": 1,
+      "name": "Mike Johnson",
+      "email": "mike.johnson@email.com",
+      "guess": 356,
+      "timestamp": "2025-08-29T01:01:03.632394",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 2,
+      "name": "Sarah Davis",
+      "email": "sarah.davis@gmail.com",
+      "guess": 225,
+      "timestamp": "2025-08-29T01:01:03.632400",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 3,
+      "name": "Alex Thompson",
+      "email": "alex.thompson@yahoo.com",
+      "guess": 467,
+      "timestamp": "2025-08-29T01:01:03.632403",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 4,
+      "name": "Jessica Wilson",
+      "email": "jessica.wilson@hotmail.com",
+      "guess": 299,
+      "timestamp": "2025-08-29T01:01:03.632405",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 5,
+      "name": "Ryan Martinez",
+      "email": "ryan.martinez@email.com",
+      "guess": 389,
+      "timestamp": "2025-08-29T01:01:03.632407",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 6,
+      "name": "Ashley Brown",
+      "email": "ashley.brown@gmail.com",
+      "guess": 290,
+      "timestamp": "2025-08-29T01:01:03.632409",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 7,
+      "name": "David Lee",
+      "email": "david.lee@yahoo.com",
+      "guess": 290,
+      "timestamp": "2025-08-29T01:01:03.632411",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 8,
+      "name": "Amanda Taylor",
+      "email": "amanda.taylor@email.com",
+      "guess": 420,
+      "timestamp": "2025-08-29T01:01:03.632413",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 9,
+      "name": "Chris Anderson",
+      "email": "chris.anderson@gmail.com",
+      "guess": 291,
+      "timestamp": "2025-08-29T01:01:03.632415",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 10,
+      "name": "Lauren Garcia",
+      "email": "lauren.garcia@hotmail.com",
+      "guess": 383,
+      "timestamp": "2025-08-29T01:01:03.632417",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 11,
+      "name": "Justin Miller",
+      "email": "justin.miller@email.com",
+      "guess": 475,
+      "timestamp": "2025-08-29T01:01:03.632419",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 12,
+      "name": "Nicole Rodriguez",
+      "email": "nicole.rodriguez@gmail.com",
+      "guess": 449,
+      "timestamp": "2025-08-29T01:01:03.632421",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 13,
+      "name": "Brandon White",
+      "email": "brandon.white@yahoo.com",
+      "guess": 202,
+      "timestamp": "2025-08-29T01:01:03.632423",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 14,
+      "name": "Stephanie Clark",
+      "email": "stephanie.clark@email.com",
+      "guess": 206,
+      "timestamp": "2025-08-29T01:01:03.632425",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 15,
+      "name": "Kevin Lopez",
+      "email": "kevin.lopez@gmail.com",
+      "guess": 258,
+      "timestamp": "2025-08-29T01:01:03.632427",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 16,
+      "name": "Emily Carter",
+      "email": "emily.carter@email.com",
+      "guess": 352,
+      "timestamp": "2025-08-29T01:01:03.632430",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 17,
+      "name": "Tyler Moore",
+      "email": "tyler.moore@gmail.com",
+      "guess": 284,
+      "timestamp": "2025-08-29T01:01:03.632432",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 18,
+      "name": "Rachel Green",
+      "email": "rachel.green@yahoo.com",
+      "guess": 250,
+      "timestamp": "2025-08-29T01:01:03.632434",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 19,
+      "name": "Jason Scott",
+      "email": "jason.scott@hotmail.com",
+      "guess": 396,
+      "timestamp": "2025-08-29T01:01:03.632436",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 20,
+      "name": "Megan Turner",
+      "email": "megan.turner@email.com",
+      "guess": 168,
+      "timestamp": "2025-08-29T01:01:03.632438",
+      "draft_position": null,
+      "ip_address": null
+    }
+  ],
+  "deleted_players": [],
+  "game_state": {
+    "id": 1,
+    "phase": "submission",
+    "winner_id": null,
+    "target_number": null,
+    "average_guess": null,
+    "num_teams": 20
+  }
+}

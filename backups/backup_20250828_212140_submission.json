@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-08-28T21:21:40.751786",
+  "players": [
+    {
+      "id": 1,
+      "name": "bass fish",
+      "email": "bass.fish@placeholder.com",
+      "guess": 555,
+      "timestamp": "2025-08-29T01:21:40.748996",
+      "draft_position": null,
+      "ip_address": "127.0.0.1"
+    }
+  ],
+  "deleted_players": [],
+  "game_state": {
+    "id": 1,
+    "phase": "submission",
+    "winner_id": null,
+    "target_number": null,
+    "average_guess": null,
+    "num_teams": 20
+  }
+}

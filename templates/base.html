@@ -8,9 +8,22 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--bears-navy);">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">🏈 Draft Order Game</a>
+            
+            <!-- Admin Login Button -->
+            <div class="navbar-nav ms-auto">
+                {% if not session.get('admin_authenticated') %}
+                    <a class="nav-link btn btn-outline-light btn-sm" href="{{ url_for('admin_login') }}">
+                        🔧 Admin
+                    </a>
+                {% else %}
+                    <a class="nav-link btn btn-sm" href="{{ url_for('admin') }}" style="background-color: var(--bears-orange); border-color: var(--bears-orange); color: white;">
+                        🔧 Admin Panel
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 
@@ -28,6 +41,26 @@
 
         {% block content %}{% endblock %}
     </div>
+
+    <!-- Theme Toggle at Bottom - Only show in dev mode -->
+    {% if game_state and game_state.dev_mode %}
+    <div class="theme-toggle-container">
+        <div class="theme-toggle-wrapper">
+            <span class="theme-label">Dark Mode</span>
+            <label class="theme-switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="mt-5 py-3 text-center" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color);">
+        <div class="container">
+            <small class="text-muted">© 2025 Leo Garkisch. All rights reserved.</small>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>

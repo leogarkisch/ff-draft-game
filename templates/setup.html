@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Game Setup - Draft Position Game{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h1 class="info-card-title">🏈 Draft Position Game Setup</h1>
+                    <p class="info-card-subtitle">Configure your draft position guessing game</p>
+                </div>
+                
+                <div class="info-card-body">
+                    <form method="POST" action="{{ url_for('initialize_game') }}">
+                        <!-- League Name -->
+                        <div class="mb-4">
+                            <label for="league_name" class="form-label">League Name</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="league_name" 
+                                   name="league_name" 
+                                   value="{{ game_state.league_name or 'Fantasy Football League' }}" 
+                                   placeholder="Enter your league name"
+                                   maxlength="100"
+                                   required>
+                            <div class="form-text">This will appear throughout the game interface</div>
+                        </div>
+
+                        <!-- Number of Teams -->
+                        <div class="mb-4">
+                            <label for="num_teams" class="form-label">Number of Teams</label>
+                            <select class="form-control" id="num_teams" name="num_teams" required>
+                                {% for i in range(2, 21) %}
+                                <option value="{{ i }}" {% if game_state.num_teams == i %}selected{% endif %}>{{ i }} Teams</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Number of draft positions available (2-20 teams)</div>
+                        </div>
+
+                        <!-- Game Mode -->
+                        <div class="mb-4">
+                            <label class="form-label">Game Mode</label>
+                            <div class="status-card">
+                                <div class="form-check">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="is_simulation" 
+                                           name="is_simulation"
+                                           {% if game_state.is_simulation %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_simulation">
+                                        <strong>Simulation Mode</strong>
+                                    </label>
+                                </div>
+                                <div class="form-text mt-2">
+                                    <strong>Real Draft:</strong> For actual fantasy league draft position selection<br>
+                                    <strong>Simulation Mode:</strong> For practice or demonstration purposes
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Developer Options -->
+                        <div class="mb-4">
+                            <label class="form-label">Developer Options</label>
+                            <div class="game-example-card">
+                                <div class="form-check">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="dev_mode" 
+                                           name="dev_mode"
+                                           {% if game_state.dev_mode %}checked{% endif %}>
+                                    <label class="form-check-label" for="dev_mode">
+                                        <strong>Development Mode</strong>
+                                    </label>
+                                </div>
+                                <div class="form-text mt-2">
+                                    Allows duplicate email submissions and other testing features
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Game Instructions Preview -->
+                        <div class="strategy-card mb-4">
+                            <div class="strategy-card-title">🎯 How the Game Works</div>
+                            <ol class="mb-0">
+                                <li>Players submit their guess for what number will be closest to <strong>2/3 of the average</strong> of all submitted numbers</li>
+                                <li>The player with the closest guess wins first choice of draft position</li>
+                                <li>Remaining players choose draft positions in order of proximity to the target</li>
+                                <li>Everyone gets their preferred draft strategy position!</li>
+                            </ol>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                🚀 Initialize Game
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Dynamic preview updates
+document.getElementById('league_name').addEventListener('input', function() {
+    // Could add live preview updates here if desired
+});
+
+document.getElementById('is_simulation').addEventListener('change', function() {
+    const modeText = this.checked ? 'Simulation Mode' : 'Real Draft Mode';
+    console.log('Game mode:', modeText);
+});
+</script>
+{% endblock %}

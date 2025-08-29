@@ -3,21 +3,21 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-10">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h2 class="mb-0">🎉 Game Results</h2>
+        <div class="info-card">
+            <div class="info-card-header">
+                <h2 class="info-card-title">🎉 Game Results</h2>
             </div>
-            <div class="card-body">
+            <div class="info-card-body">
                 {% if winner %}
-                <div class="alert alert-success text-center">
+                <div class="status-card success">
                     <h3>🏆 Winner: {{ winner.name }}</h3>
                     <p><strong>Winning guess:</strong> {{ winner.guess }}</p>
                     <p><strong>Target number:</strong> {{ "%.2f"|format(target) }} (2/3 × {{ "%.2f"|format(average) }})</p>
                     <p><strong>Difference:</strong> {{ "%.2f"|format(abs(winner.guess - target)) }}</p>
                 </div>
 
-                <div class="alert alert-info">
-                    <h4>Next Step: Draft Position Selection</h4>
+                <div class="game-example-card">
+                    <h4 class="game-example-title">Next Step: Draft Position Selection</h4>
                     <p>{{ winner.name }} gets to pick their draft position first!</p>
                     <p>Then everyone else will pick in order of how close they were to the target.</p>
                 </div>
@@ -25,14 +25,14 @@
 
                 <!-- Draft Order Section -->
                 {% if draft_positions_selected %}
-                <div class="card mt-4">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">🏈 Final Fantasy Football Draft Order</h4>
+                <div class="submissions-card mt-4">
+                    <div class="submissions-card-header">
+                        <h4 class="submissions-card-title">🏈 Final Fantasy Football Draft Order</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="submissions-card-body">
                         <div class="table-responsive">
                             <table class="table table-striped">
-                                <thead class="table-dark">
+                                <thead style="background-color: var(--bears-navy); color: white;">
                                     <tr>
                                         <th>Draft Position</th>
                                         <th>Player Name</th>
@@ -47,7 +47,7 @@
                                         <td>
                                             {{ player.name }}
                                             {% if player.id == winner.id %}
-                                                <span class="badge bg-warning text-dark ms-2">Winner</span>
+                                                <span class="badge" style="background-color: var(--bears-orange); color: white;">Winner</span>
                                             {% endif %}
                                         </td>
                                         <td>{{ player.guess }}</td>
@@ -64,7 +64,7 @@
                 <h4>All Submissions:</h4>
                 <div class="table-responsive">
                     <table class="table table-striped">
-                        <thead>
+                        <thead style="background-color: var(--bears-navy); color: white;">
                             <tr>
                                 <th>Place</th>
                                 <th>Name</th>
@@ -78,7 +78,7 @@
                         </thead>
                         <tbody>
                             {% for player in players %}
-                            <tr class="{% if winner and player.id == winner.id %}table-success{% endif %}">
+                            <tr class="{% if winner and player.id == winner.id %}table-warning{% endif %}">
                                 <td>
                                     {% if loop.index == 1 %}
                                         🏆 1st
@@ -102,7 +102,7 @@
                                 {% if draft_positions_selected %}
                                 <td>
                                     {% if player.draft_position %}
-                                        <span class="badge bg-primary">{{ player.draft_position }}</span>
+                                        <span class="badge" style="background-color: var(--bears-orange); color: white;">{{ player.draft_position }}</span>
                                     {% else %}
                                         <span class="text-muted">Not selected</span>
                                     {% endif %}

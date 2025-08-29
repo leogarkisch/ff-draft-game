@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Not Initialized</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header text-center">
+                <h1>🏈 Fantasy Football Draft Order Game</h1>
+            </div>
+            <div class="card-body text-center">
+                <div class="alert alert-warning">
+                    <h2>🔧 Game Not Initialized</h2>
+                    <p>The game has not been set up yet. An administrator needs to initialize the game before players can participate.</p>
+                </div>
+                
+                <div class="mt-4">
+                    <h3>For Administrators:</h3>
+                    <p>Access the admin panel to initialize the game with all settings:</p>
+                    <a href="{{ url_for('admin') }}" class="btn btn-primary btn-lg">
+                        🔑 Go to Admin Panel
+                    </a>
+                </div>
+                
+                <div class="mt-4">
+                    <h3>For Players:</h3>
+                    <p>Please wait for an administrator to set up the game. Check back soon!</p>
+                    <button onclick="location.reload()" class="btn btn-secondary">
+                        🔄 Refresh Page
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -9,6 +9,98 @@
                 <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
             </div>
             <div class="card-body">
+                <!-- Initialization Status -->
+                <div class="alert {% if game_state and game_state.is_initialized %}alert-success{% else %}alert-warning{% endif %}">
+                    <h4>🚀 Game Initialization</h4>
+                    {% if game_state and game_state.is_initialized %}
+                        <p><strong>✅ Game Initialized</strong></p>
+                        <p><strong>League:</strong> {{ game_state.league_name or 'Fantasy Football League' }}</p>
+                        <p><strong>Teams:</strong> {{ game_state.num_teams }}</p>
+                        <p><strong>Mode:</strong> 
+                            <span class="badge {% if game_state.is_simulation %}bg-info{% else %}bg-success{% endif %}">
+                                {% if game_state.is_simulation %}Simulation{% else %}Real Draft{% endif %}
+                            </span>
+                        </p>
+                        <p><strong>Dev Mode:</strong> 
+                            <span class="badge {% if game_state.dev_mode %}bg-warning{% else %}bg-secondary{% endif %}">
+                                {% if game_state.dev_mode %}Enabled{% else %}Disabled{% endif %}
+                            </span>
+                        </p>
+                        <p><strong>Submission Deadline:</strong> 
+                            {% if game_state.submission_deadline %}
+                                <span class="badge bg-warning">{{ game_state.submission_deadline.astimezone(pytz.timezone('US/Eastern')).strftime('%m/%d %I:%M %p ET') }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No deadline set</span>
+                            {% endif %}
+                        </p>
+                        <div class="mt-2">
+                            <form method="POST" action="{{ url_for('admin_reset_to_setup') }}" class="inline-form">
+                                <button type="submit" class="btn btn-warning" 
+                                        onclick="return confirm('This will reset the game to setup phase. All current data will be lost. Continue?')">
+                                    Reset to Setup
+                                </button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <p><strong>⚠️ Game Not Initialized</strong></p>
+                        <p>Use the form below to initialize the game with all settings:</p>
+                        
+                        <!-- Game Initialization Form -->
+                        <form method="POST" action="{{ url_for('admin_initialize_game') }}" class="border p-3 bg-light rounded">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="league_name" class="form-label">League Name</label>
+                                    <input type="text" class="form-control" id="league_name" name="league_name" 
+                                           value="{{ game_state.league_name if game_state and game_state.league_name else 'Fantasy Football League' }}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="num_teams" class="form-label">Number of Teams</label>
+                                    <select class="form-control" id="num_teams" name="num_teams" required>
+                                        {% for i in range(2, 21) %}
+                                            <option value="{{ i }}" {% if game_state and game_state.num_teams == i %}selected{% elif i == 12 %}selected{% endif %}>{{ i }} teams</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="is_simulation" name="is_simulation" 
+                                               {% if game_state and game_state.is_simulation %}checked{% endif %}>
+                                        <label class="form-check-label" for="is_simulation">
+                                            Simulation Mode (test run)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="dev_mode" name="dev_mode" 
+                                               {% if game_state and game_state.dev_mode %}checked{% endif %}>
+                                        <label class="form-check-label" for="dev_mode">
+                                            Developer Mode
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="deadline_date" class="form-label">Submission Deadline (Optional)</label>
+                                    <input type="date" class="form-control" id="deadline_date" name="deadline_date">
+                                    <small class="text-muted">Leave blank for no deadline</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="deadline_time" class="form-label">Time (ET)</label>
+                                    <input type="time" class="form-control" id="deadline_time" name="deadline_time" value="18:00">
+                                    <small class="text-muted">Defaults to 6:00 PM ET</small>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                🚀 Initialize Game
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+
                 <!-- Game State Controls -->
                 <div class="alert alert-info">
                     <h4>Game Status</h4>
@@ -18,66 +110,174 @@
                     
                     {% if game_state and game_state.phase == 'submission' %}
                         <p>Players are currently submitting their number guesses.</p>
-                        <form method="POST" action="{{ url_for('advance_phase') }}" style="display: inline;">
+                        <form method="POST" action="{{ url_for('advance_phase') }}" class="inline-form">
                             <button type="submit" class="btn btn-warning" 
-                                    {% if not players %}disabled{% endif %}>
-                                {% if not players %}No Submissions Yet{% else %}Advance to Results{% endif %}
+                                    onclick="return confirm('{% if not players %}No submissions yet. This will skip to draft selection. {% else %}This will calculate results and advance to next phase. {% endif %}Continue?')">
+                                {% if not players %}Force Advance to Draft{% else %}Advance to Results{% endif %}
                             </button>
                         </form>
+                        {% if players %}
+                        <small class="text-muted d-block mt-1">{{ players|length }} submission(s) received</small>
+                        {% else %}
+                        <small class="text-muted d-block mt-1">No submissions yet - can force advance to draft selection</small>
+                        {% endif %}
                     {% elif game_state and game_state.phase == 'results' %}
                         <p>Results calculated. Winner can now select draft position.</p>
-                        <form method="POST" action="{{ url_for('advance_phase') }}" style="display: inline;">
+                        <form method="POST" action="{{ url_for('advance_phase') }}" class="inline-form">
                             <button type="submit" class="btn btn-success">Advance to Draft Selection</button>
                         </form>
                     {% elif game_state and game_state.phase == 'selecting' %}
                         <p>Draft position selection in progress.</p>
-                        <a href="{{ url_for('draft_selection') }}" class="btn btn-primary" style="margin-right: 10px;">View Draft Selection</a>
-                        <form method="POST" action="{{ url_for('advance_phase') }}" style="display: inline;">
+                        <a href="{{ url_for('draft_selection') }}" class="btn btn-primary inline-form-margin-right">View Draft Selection</a>
+                        <form method="POST" action="{{ url_for('advance_phase') }}" class="inline-form">
                             <button type="submit" class="btn btn-info">Reset for New Game</button>
                         </form>
                     {% elif game_state and game_state.phase == 'completed' %}
                         <p>Draft order complete! All positions selected.</p>
-                        <form method="POST" action="{{ url_for('reset_game') }}" style="display: inline;">
+                        <form method="POST" action="{{ url_for('reset_game') }}" class="inline-form">
                             <button type="submit" class="btn btn-success">Start New Game</button>
                         </form>
                     {% endif %}
                     
-                    <form method="POST" action="{{ url_for('reset_game') }}" style="display: inline; margin-left: 10px;">
-                        <button type="submit" class="btn btn-danger" 
-                                onclick="return confirm('Are you sure? This will delete all data!')">
-                            Complete Reset
-                        </button>
-                    </form>
+                    <!-- Complete Reset (always available) -->
+                    <div class="mt-3 pt-2 border-top">
+                        <form method="POST" action="{{ url_for('reset_game') }}" class="inline-form">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                    onclick="return confirm('This will delete all data and start completely over. Are you sure?')">
+                                �️ Complete Reset
+                            </button>
+                        </form>
+                        <small class="text-muted d-block">Clear all data and start fresh</small>
+                    </div>
                 </div>
 
-                <!-- Simulation Controls -->
-                <div class="alert alert-warning">
-                    <h4>🧪 Testing & Simulation</h4>
+                <!-- Quick Actions for Initialized Games -->
+                {% if game_state and game_state.is_initialized %}
+                <div class="alert alert-primary">
+                    <h4>🎮 Quick Actions</h4>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <h6>Custom Simulation</h6>
+                        {% if game_state.is_simulation %}
+                        <div class="col-md-4 mb-3">
                             <form method="POST" action="{{ url_for('simulate_game') }}">
-                                <div class="input-group mb-2">
-                                    <input type="number" name="num_players" class="form-control" 
-                                           value="8" min="3" max="30" placeholder="# players">
-                                    <button type="submit" class="btn btn-outline-primary">
-                                        Create Simulation
-                                    </button>
-                                </div>
+                                <button type="submit" class="btn btn-info">
+                                    🎲 Regenerate Players
+                                </button>
                             </form>
-                            <small class="form-text text-muted">Creates dummy players with random guesses (3-30 players supported)</small>
+                            <small class="text-muted">Creates {{ game_state.num_teams }} dummy players</small>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <h6>Quick Test</h6>
-                            <form method="POST" action="{{ url_for('quick_test') }}" style="display: inline;">
+                        <div class="col-md-4 mb-3">
+                            <form method="POST" action="{{ url_for('quick_test') }}" class="inline-form">
                                 <button type="submit" class="btn btn-outline-success">
                                     🚀 Quick Test Scenario
                                 </button>
                             </form>
-                            <small class="form-text text-muted">5 players, pre-calculated winner</small>
+                            <small class="text-muted">5 players, pre-calculated winner</small>
+                        </div>
+                        {% endif %}
+                        <div class="col-md-4 mb-3">
+                            <form method="POST" action="{{ url_for('admin_toggle_simulation_mode') }}">
+                                <button type="submit" class="btn {% if game_state.is_simulation %}btn-success{% else %}btn-info{% endif %}">
+                                    {% if game_state.is_simulation %}Switch to Real Mode{% else %}Switch to Simulation{% endif %}
+                                </button>
+                            </form>
+                            <small class="text-muted">Current: {% if game_state.is_simulation %}Simulation{% else %}Real Draft{% endif %}</small>
                         </div>
                     </div>
                 </div>
+                {% endif %}
+
+                <!-- League Member Management -->
+                {% if game_state and game_state.is_initialized %}
+                <div class="alert alert-warning">
+                    <h4>👥 League Member Management</h4>
+                    <p>Upload a CSV file with league member names to enable dropdown selection:</p>
+                    
+                    <!-- CSV Upload Form -->
+                    <form method="POST" action="{{ url_for('upload_league_members') }}" enctype="multipart/form-data" class="mb-3">
+                        <div class="row align-items-end">
+                            <div class="col-md-6">
+                                <label for="csv_file" class="form-label">CSV File</label>
+                                <input type="file" name="csv_file" id="csv_file" class="form-control" accept=".csv" required>
+                                <small class="text-muted">CSV should have a 'name' column with league member names</small>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn" style="background-color: var(--bears-orange); border-color: var(--bears-orange); color: white;">Upload Names</button>
+                            </div>
+                            <div class="col-md-3">
+                                <form method="POST" action="{{ url_for('clear_league_members') }}" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                            onclick="return confirm('Clear all league member names?')">
+                                        Clear All Names
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <!-- Current League Members -->
+                    {% if league_members %}
+                    <div class="mt-3">
+                        <h6>Current League Members ({{ league_members|length }}):</h6>
+                        <div class="row">
+                            {% for member in league_members %}
+                            <div class="col-md-3 mb-1">
+                                <span class="badge" style="background-color: var(--bears-navy); color: white;">{{ member.name }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="mt-3">
+                        <small class="text-muted">No league members uploaded yet. Players will use free text input.</small>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Backup Management -->
+                <div class="alert alert-secondary">
+                    <h4>💾 Backup Management</h4>
+                    <p>Automatic backups are created after every submission and phase change.</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form method="POST" action="{{ url_for('create_manual_backup') }}" class="inline-form">
+                                <button type="submit" class="btn btn-secondary">
+                                    Create Manual Backup
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('list_backups') }}" class="btn btn-outline-secondary">
+                                View All Backups
+                            </a>
+                        </div>
+                    </div>
+                    <small class="form-text text-muted">Backups are stored locally and include both database and JSON exports</small>
+                </div>
+
+                <!-- Manual Player Addition (for late arrivals) -->
+                {% if game_state and game_state.phase in ['selecting', 'results'] %}
+                <div class="alert alert-info">
+                    <h4>➕ Add Late Player</h4>
+                    <p>Add players who missed the submission deadline directly to draft selection:</p>
+                    <form method="POST" action="{{ url_for('add_player_to_draft') }}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" name="player_name" class="form-control" 
+                                       placeholder="Player Name" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="email" name="player_email" class="form-control" 
+                                       placeholder="Email Address" required>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-info">Add Player to Draft</button>
+                            </div>
+                        </div>
+                    </form>
+                    <small class="form-text text-muted">Players added this way won't have participated in the number guessing game</small>
+                </div>
+                {% endif %}
 
                 <!-- Statistics -->
                 <div class="row mb-4">
@@ -127,6 +327,7 @@
                                 <th>Guess</th>
                                 <th>Difference from Target</th>
                                 <th>Timestamp</th>
+                                <th>IP Address</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -150,6 +351,17 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                                <td>
+                                    {% if player.ip_address %}
+                                        {% if ip_counts.get(player.ip_address, 0) > 1 %}
+                                            <span class="text-warning fw-bold" title="Multiple submissions from this IP">⚠️ {{ player.ip_address }}</span>
+                                        {% else %}
+                                            {{ player.ip_address }}
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     {% if player.draft_position %}
                                         <span class="badge bg-info">Draft Pos: {{ player.draft_position }}</span>
@@ -216,6 +428,7 @@
                                     <th>Email</th>
                                     <th>Guess</th>
                                     <th>Original Time</th>
+                                    <th>IP Address</th>
                                     <th>Deleted Time</th>
                                     <th>Reason</th>
                                 </tr>
@@ -227,6 +440,13 @@
                                     <td>{{ deleted.email }}</td>
                                     <td>{{ deleted.guess }}</td>
                                     <td>{{ deleted.original_timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                                    <td>
+                                        {% if deleted.ip_address %}
+                                            {{ deleted.ip_address }}
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
                                     <td>{{ deleted.deleted_timestamp.strftime('%m/%d %I:%M %p') }}</td>
                                     <td>
                                         <small>{{ deleted.deleted_reason or 'No reason provided' }}</small>

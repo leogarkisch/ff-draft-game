@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-08-28T19:03:07.752729",
+  "players": [
+    {
+      "id": 1,
+      "name": "test",
+      "email": "lman@aol.com",
+      "guess": 2,
+      "timestamp": "2025-08-28T23:01:22.058889",
+      "draft_position": null,
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": 2,
+      "name": "test",
+      "email": "email@test.com",
+      "guess": 3,
+      "timestamp": "2025-08-28T23:03:07.748913",
+      "draft_position": null,
+      "ip_address": "127.0.0.1"
+    }
+  ],
+  "deleted_players": [],
+  "game_state": {
+    "id": 1,
+    "phase": "submission",
+    "winner_id": null,
+    "target_number": null,
+    "average_guess": null,
+    "num_teams": 12
+  }
+}

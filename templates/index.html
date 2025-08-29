@@ -1,116 +1,185 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h2 class="mb-0">🏈 Fantasy Football Draft Order Game</h2>
-            </div>
-            <div class="card-body">
-                <div class="alert alert-info">
-                    <h4>Welcome to the Draft Order Selection Game!</h4>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Main Header Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h2 class="info-card-title">🏈 {{ league_name }} Draft Order Game</h2>
+                    <p class="info-card-subtitle">League Size: {{ num_teams }} teams</p>
+                </div>
+                <div class="info-card-body">
                     <p><strong>How it works:</strong></p>
                     <ul>
                         <li>Choose a number between 0 and 1000</li>
                         <li>Your goal is to guess as close to 2/3 of the average of everyone's guesses</li>
                         <li>Whoever gets closest to that number wins!</li>
                         <li>The winner gets first pick of draft position</li>
-                        <li>Then everyone else picks their draft spot in order</li>
+                        <li>Then everyone else picks their draft spot in the proceeding order</li>
                     </ul>
-                                <p><strong>Example:</strong> If Alice guesses 300, Bob guesses 600, Caroline guesses 900, and Doug guesses 450, 
-            the average is 562.5. Two-thirds of 562.5 is 375. Doug's guess of 450 is closest to 375, so Doug wins and gets to pick his draft position first!</p>
-            
-            <p><strong>Then the draft order selection works like this:</strong></p>
-            <ul class="small">
-                <li><strong>1st to pick:</strong> Doug (winner) - closest to target (375)</li>
-                <li><strong>2nd to pick:</strong> Alice (guess: 300) - second closest to target</li>  
-                <li><strong>3rd to pick:</strong> Bob (guess: 600) - third closest to target</li>
-                <li><strong>4th to pick:</strong> Caroline (guess: 900) - furthest from target</li>
-            </ul>
-            
-            <p class="small text-muted">So if Doug picks draft position #3, then Alice gets to choose from the remaining positions (1, 2, 4, etc.), 
-            followed by Bob, and finally Caroline gets whatever's left.</p>
-                    <p><strong>Status:</strong> 
-                        <span class="badge bg-success">Submissions Open</span>
-                    </p>
+                </div>
+            </div>
+
+            <!-- Game Example Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h5 class="info-card-title">📝 Game Example</h5>
+                </div>
+                <div class="info-card-body">
+                    <p><strong>Example:</strong> If Alice guesses 300, Bob guesses 600, Caroline guesses 900, and Doug guesses 450, 
+                    the average is 562.5. Two-thirds of 562.5 is 375. Doug's guess of 450 is closest to 375, so Doug wins and gets to pick his draft position first!</p>
                     
-                    <!-- Countdown Timer -->
-                    <div class="card mt-3 mb-3">
-                        <div class="card-body text-center">
-                            <h6 class="card-title">⏰ Submission Deadline</h6>
-                            <p class="mb-2">Thursday, August 28th at 12:00 PM ET</p>
-                            <div id="countdown" class="fs-4 fw-bold text-primary">
+                    <p><strong>Then the draft order selection works like this:</strong></p>
+                    <ul class="small">
+                        <li><strong>1st to pick:</strong> Doug (winner) - closest to target (375)</li>
+                        <li><strong>2nd to pick:</strong> Alice (guess: 300) - second closest to target</li>  
+                        <li><strong>3rd to pick:</strong> Bob (guess: 600) - third closest to target</li>
+                        <li><strong>4th to pick:</strong> Caroline (guess: 900) - furthest from target</li>
+                    </ul>
+                    
+                    <p class="small text-muted">So if Doug picks draft position #3, then Alice gets to choose from the remaining positions (1, 2, 4, etc.), 
+                    followed by Bob, and finally Caroline gets whatever's left.</p>
+                    
+                    <!-- Strategy Insight -->
+                    <div class="strategy-card">
+                        <h6 class="strategy-card-title">🤔 "Why wouldn't the winner just choose draft slot #1?"</h6>
+                        {% set middle_slot = (num_teams // 2) + 1 %}
+                        {% set slot1_second = 2 * num_teams %}
+                        {% set slot1_third = (2 * num_teams) + 1 %}
+                        {% set slot1_fourth = 4 * num_teams %}
+                        {% set middle_second = (2 * num_teams) - middle_slot + 1 %}
+                        {% set middle_third = (2 * num_teams) + middle_slot %}
+                        {% set middle_fourth = (4 * num_teams) - middle_slot + 1 %}
+                        {% set last_slot_second = num_teams + 1 %}
+                        <p class="small mb-2 text-muted">Great question! While draft slot #1 gets the best player, you'll wait longest for your next pick. In a {{ num_teams }}-team snake draft, draft slot #1 gets picks {{ 1 }}, {{ slot1_second }}, {{ slot1_third }}, {{ slot1_fourth }}... while draft slot #{{ middle_slot }} gets picks {{ middle_slot }}, {{ middle_second }}, {{ middle_third }}, {{ middle_fourth }} - much closer together! Some winners even choose the last slot because they'd get picks {{ num_teams }} and {{ last_slot_second }} and might value those two late-first-round-caliber players above picks 1 and {{ slot1_second }}.</p>
+                        <a href="/snake-draft" class="btn btn-primary btn-sm">See the full pick pattern →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status and Deadline Card -->
+            <div class="info-card {% if submissions_open %}status-success{% else %}status-danger{% endif %}">
+                <div class="info-card-header">
+                    <h5 class="info-card-title">⏰ Submission Status</h5>
+                    <div class="info-card-subtitle">
+                        {% if submissions_open %}
+                            <span class="badge bg-success fs-6">Submissions Open</span>
+                        {% else %}
+                            <span class="badge bg-danger fs-6">Submissions Closed</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="info-card-body text-center">
+                    {% if deadline_str != "No deadline set" %}
+                        <p class="mb-2 fs-5">{{ deadline_str }}</p>
+                        {% if submissions_open %}
+                            <div id="countdown" class="fs-4 fw-bold" 
+                                 style="color: var(--bears-orange);"
+                                 data-deadline="{{ deadline_dt.isoformat() if deadline_dt else '' }}">
                                 Loading countdown...
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <form method="POST" action="{{ url_for('submit_guess') }}">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Your Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="email" class="form-label">ESPN Account Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="guess" class="form-label">Your Number Guess (0-1000)</label>
-                        <input type="number" class="form-control" id="guess" name="guess" min="0" max="1000" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary btn-lg w-100">Submit Your Guess</button>
-                </form>
-                
-                <!-- Current Submissions -->
-                {% if players %}
-                <div class="mt-4">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">📊 Current Submissions ({{ players|length }})</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Submitted</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for player in players %}
-                                        <tr>
-                                            <td>{{ player.name }}</td>
-                                            <td>{{ player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
-                                            <td>
-                                                <span class="badge bg-success">✓ Submitted</span>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                        {% else %}
+                            <div class="fs-5 fw-bold text-danger">
+                                Deadline has passed
                             </div>
-                            <div class="text-center mt-3">
-                                <small class="text-muted">Guesses are hidden until results are revealed</small>
-                            </div>
-                        </div>
-                    </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="mb-2 text-muted">No deadline set by admin</p>
+                    {% endif %}
                 </div>
-                {% else %}
-                <div class="mt-4">
-                    <div class="alert alert-warning text-center">
-                        <h5>🎯 Be the first to submit!</h5>
-                        <p class="mb-0">No one has submitted a guess yet. You could be the first!</p>
-                    </div>
-                </div>
-                {% endif %}
             </div>
+
+            <!-- Submission Form Card -->
+            {% if submissions_open %}
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h4 class="info-card-title">🎯 Submit Your Guess</h4>
+                    <p class="info-card-subtitle">Enter your information and number guess below</p>
+                </div>
+                <div class="info-card-body">
+                    <form method="POST" action="{{ url_for('submit_guess') }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            {% if league_members %}
+                                <select class="form-control" id="name" name="name" required>
+                                    <option value="">Select your name...</option>
+                                    {% for member in league_members %}
+                                        <option value="{{ member.name }}">{{ member.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="text-muted">Select your name from the league roster</small>
+                            {% else %}
+                                <input type="text" class="form-control" id="name" name="name" required>
+                                <small class="text-muted">Enter your name</small>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="guess" class="form-label">Your Number Guess (0-1000)</label>
+                            <input type="number" class="form-control" id="guess" name="guess" min="0" max="1000" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-submit btn-lg w-100">Submit Your Guess</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div class="info-card status-danger">
+                <div class="info-card-header">
+                    <h5 class="info-card-title">⏰ Submissions Closed</h5>
+                </div>
+                <div class="info-card-body text-center">
+                    <p class="mb-0">The submission deadline has passed. No new guesses can be submitted.</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Current Submissions -->
+            {% if players %}
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h5 class="info-card-title">📊 Current Submissions ({{ players|length }})</h5>
+                </div>
+                <div class="info-card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Submitted</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for player in players %}
+                                <tr>
+                                    <td>{{ player.name }}</td>
+                                    <td>{{ player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                                    <td>
+                                        <span class="badge" style="background-color: var(--bears-orange); color: white;">✓ Submitted</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <small class="text-muted">Guesses are hidden until results are revealed</small>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="info-card status-primary">
+                <div class="info-card-header">
+                    <h5 class="info-card-title">🎯 Be the first to submit!</h5>
+                </div>
+                <div class="info-card-body text-center">
+                    <p class="mb-0">No one has submitted a guess yet. You could be the first!</p>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

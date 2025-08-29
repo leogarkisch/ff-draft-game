@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}What is a Snake Draft?{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header" style="background-color: var(--bears-navy); color: white;">
+                    <h2 class="mb-0">🐍 What is a Snake Draft?</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead">A snake draft is a drafting system where the pick order reverses each round, creating a "snake-like" pattern that ensures fairness.</p>
+                    
+                    <h4>How it Works:</h4>
+                    <ul>
+                        <li><strong>Round 1:</strong> Teams pick in order 1, 2, 3, ..., {{ num_teams }}</li>
+                        <li><strong>Round 2:</strong> Teams pick in reverse order {{ num_teams }}, {{ num_teams - 1 }}, ..., 2, 1</li>
+                        <li><strong>Round 3:</strong> Back to normal order 1, 2, 3, ..., {{ num_teams }}</li>
+                        <li><strong>Round 4:</strong> Reverse again {{ num_teams }}, {{ num_teams - 1 }}, ..., 2, 1</li>
+                    </ul>
+
+                    <h4>Why Use a Snake Draft?</h4>
+                    <p>The snake draft system balances the advantage of picking first. While the team with pick #1 gets the best player overall, they also get the worst pick in round 2. This creates more balanced teams and makes the draft more exciting for everyone!</p>
+
+                    <h4>Example Snake Draft Pattern ({{ num_teams }} teams):</h4>
+                    <!-- Snake Draft Visual Grid -->
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-lg-10">
+                            <div class="snake-draft-grid">
+                                <div class="text-center mb-2">
+                                    <small class="text-muted"><strong>{{ num_teams }}-Team Snake Draft Pattern</strong></small>
+                                </div>
+                                
+                                <!-- Round headers -->
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="draft-header-spacer"></div>
+                                    {% for round in range(1, 5) %}
+                                    <div class="draft-header-title">
+                                        <small class="fw-bold">Round {{ round }}</small>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <!-- Draft positions grid -->
+                                {% for pos in range(1, num_teams + 1) %}
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <div class="draft-header-position">
+                                        <small>Pos {{ pos }}</small>
+                                    </div>
+                                    
+                                    {% for round in range(1, 5) %}
+                                    <div class="draft-position-container">
+                                        {% if round % 2 == 1 %}
+                                            {% set pick_num = ((round - 1) * num_teams) + pos %}
+                                        {% else %}
+                                            {% set pick_num = ((round - 1) * num_teams) + (num_teams - pos + 1) %}
+                                        {% endif %}
+                                        
+                                        <div class="draft-pick-box 
+                                            {% if pos == 1 %}position-1{% elif pos == num_teams %}position-last{% else %}position-middle{% endif %}
+                                            {% if round % 2 == 0 %}reverse-round{% endif %}">
+                                            {{ pick_num }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="small"><strong>Example:</strong> If you're in draft position 3:</p>
+                            <ul class="small">
+                                <li><strong>Round 1:</strong> Pick #3</li>
+                                <li><strong>Round 2:</strong> Pick #{{ (num_teams * 2) - 2 }}</li>
+                                <li><strong>Round 3:</strong> Pick #{{ (num_teams * 2) + 3 }}</li>
+                                <li><strong>Round 4:</strong> Pick #{{ (num_teams * 4) - 2 }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="small text-muted">
+                                <strong>Key Benefits:</strong><br>
+                                • Early picks get late picks next round<br>
+                                • Middle positions get consecutive picks<br>
+                                • Creates balanced opportunities
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="/" class="btn" style="background-color: var(--bears-orange); border-color: var(--bears-orange); color: white;">← Back to Draft Order Game</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

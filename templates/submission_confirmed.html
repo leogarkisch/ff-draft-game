@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Submission Confirmed - Fantasy Football Draft Order Game{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold" style="color: var(--bears-navy);">🏈 Fantasy Football Draft Order Game</h1>
+        </div>
+
+        <!-- Confirmation Card -->
+        <div class="info-card">
+            <div class="info-card-header text-center">
+                <h3 class="info-card-title">✅ Submission Confirmed!</h3>
+            </div>
+            <div class="info-card-body text-center">
+                <div class="mb-4">
+                    <h4 style="color: var(--bears-orange);">Thank you, {{ player.name }}!</h4>
+                    <p class="lead">Your guess has been successfully submitted.</p>
+                </div>
+
+                <!-- Submission Details -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title" style="color: var(--bears-navy);">Your Submission</h6>
+                                <p class="card-text">
+                                    <strong>Name:</strong> {{ player.name }}<br>
+                                    <strong>Guess:</strong> {{ player.guess }}<br>
+                                    <strong>Submitted:</strong> {{ player.timestamp.strftime('%I:%M %p ET') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title" style="color: var(--bears-navy);">Game Status</h6>
+                                <p class="card-text">
+                                    <strong>League Size:</strong> {{ num_teams }} teams<br>
+                                    <strong>Total Submissions:</strong> {{ total_submissions }}<br>
+                                    {% if deadline_str %}
+                                    <strong>Deadline:</strong> {{ deadline_str }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Steps -->
+                    <div class="alert alert-info mt-4">
+                        <h6 class="alert-heading">What's Next?</h6>
+                        <p class="mb-0">
+                            {% if game_state.phase == 'submission' %}
+                            We're still collecting submissions from all league members. 
+                            You'll be notified when the winner is determined and draft order selection begins!
+                            {% elif game_state.phase == 'results' %}
+                            The submission phase is complete! Check the results to see who won.
+                            {% elif game_state.phase == 'selecting' %}
+                            Draft order selection is now active! The winner is choosing their preferred draft slot.
+                            {% else %}
+                            The draft order has been finalized! Check back for the final results.
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Current Submissions -->
+                    {% if players %}
+                    <div class="mt-4">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <h5 class="info-card-title">📊 Current Submissions ({{ players|length }})</h5>
+                            </div>
+                            <div class="info-card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Submitted</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for submission_player in players %}
+                                            <tr{% if submission_player.id == player.id %} class="table-warning"{% endif %}>
+                                                <td>
+                                                    {{ submission_player.name }}
+                                                    {% if submission_player.id == player.id %}
+                                                    <span class="badge ms-1" style="background-color: var(--bears-orange); color: white;">You</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ submission_player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                                                <td>
+                                                    <span class="badge" style="background-color: var(--bears-orange); color: white;">✓ Submitted</span>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <small class="text-muted">Guesses are hidden until results are revealed</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Navigation -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <a href="{{ url_for('index') }}" class="btn btn-submit">
+                            📊 View Current Status
+                        </a>
+                        <a href="/snake-draft" class="btn btn-outline-primary">
+                            🐍 Learn About Snake Draft
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-4 text-muted">
+                <small>
+                    🎯 Using 2/3 average game theory for fair draft order determination<br>
+                    Questions? Contact your league commissioner.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

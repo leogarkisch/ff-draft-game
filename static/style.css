@@ -1,63 +1,338 @@
+/* 
+🐻 CHICAGO BEARS COLOR SCHEME - NEVER CHANGE THIS! 🐻
+Navy: #0B162A, Orange: #C83803, Light Blue: #1E3A5F, Light Orange: #E85A2B
+ALL primary/secondary colors throughout the app MUST be Bears themed.
+*/
+
+:root {
+    /* Chicago Bears Colors */
+    --bears-navy: #0B162A;
+    --bears-orange: #C83803;
+    --bears-light-blue: #1E3A5F;
+    --bears-light-orange: #E85A2B;
+    --bears-darker-blue: #2A4A75;
+    
+    /* Theme Variables - Light Mode Default */
+    --bg-primary: #f8f9fa;
+    --bg-secondary: #ffffff;
+    --bg-accent: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-inverse: #ffffff;
+    --border-color: #dee2e6;
+    --shadow: rgba(11, 22, 42, 0.1);
+    --shadow-hover: rgba(11, 22, 42, 0.2);
+    --primary-color: var(--bears-navy);
+    --secondary-color: var(--bears-orange);
+    --primary-hover: var(--bears-light-blue);
+    --secondary-hover: var(--bears-light-orange);
+}
+
+/* Dark Mode Themes */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --bg-primary: #121212;
+        --bg-secondary: #1e1e1e;
+        --bg-accent: #2a2a2a;
+        --text-primary: #ffffff;
+        --text-secondary: #b0b0b0;
+        --text-inverse: #000000;
+        --border-color: #404040;
+        --shadow: rgba(0, 0, 0, 0.5);
+        --shadow-hover: rgba(0, 0, 0, 0.7);
+        --primary-color: var(--bears-light-blue);
+        --secondary-color: var(--bears-light-orange);
+        --primary-hover: var(--bears-darker-blue);
+        --secondary-hover: var(--bears-orange);
+    }
+}
+
+[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-accent: #2a2a2a;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-inverse: #000000;
+    --border-color: #404040;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-hover: rgba(0, 0, 0, 0.7);
+    --primary-color: var(--bears-light-blue);
+    --secondary-color: var(--bears-light-orange);
+    --primary-hover: var(--bears-darker-blue);
+    --secondary-hover: var(--bears-orange);
+}
+
+/* Base Styles & Bootstrap Overrides */
 body {
-    background-color: #f8f9fa;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
 }
 
-.card {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: none;
-    margin-bottom: 2rem;
+/* Bootstrap Override: Primary & Secondary Colors = Bears Colors */
+.text-primary, .btn-primary, .bg-primary, .border-primary, .text-warning { color: var(--primary-color) !important; }
+.bg-primary { background-color: var(--primary-color) !important; color: var(--text-inverse) !important; }
+.btn-primary { background-color: var(--primary-color); border: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px var(--shadow); }
+.btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 8px var(--shadow-hover); color: var(--text-inverse); }
+.btn-outline-primary { color: var(--primary-color); border-color: var(--primary-color); }
+.btn-outline-primary:hover { background-color: var(--primary-color); color: var(--text-inverse); transform: translateY(-1px); }
+
+/* Submit Button - High Visibility */
+.btn-submit { 
+    background-color: var(--bears-orange); 
+    border-color: var(--bears-orange); 
+    color: white; 
+    font-weight: 600; 
+    transition: all 0.3s ease; 
+    box-shadow: 0 2px 4px var(--shadow); 
+}
+.btn-submit:hover { 
+    background-color: var(--bears-light-orange); 
+    border-color: var(--bears-light-orange); 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 8px var(--shadow-hover); 
+    color: white; 
 }
 
-.navbar-brand {
-    font-weight: bold;
-    font-size: 1.5rem;
-}
+/* Consolidated Text & Background Classes */
+.text-secondary, .text-muted, small, .small { color: var(--text-secondary) !important; }
+.text-white { color: var(--text-inverse) !important; }
+.bg-secondary { background-color: var(--bg-accent) !important; color: var(--text-primary) !important; }
+.bg-light { background-color: var(--bg-accent) !important; color: var(--text-primary) !important; }
+.bg-dark { background-color: var(--primary-color) !important; color: var(--text-inverse) !important; }
 
-.btn-primary {
-    background-color: #0066cc;
-    border-color: #0066cc;
+/* Cards & Components */
+.card, .info-card, .submissions-card { 
+    background-color: var(--bg-secondary); 
+    box-shadow: 0 4px 6px var(--shadow); 
+    border: 1px solid var(--border-color); 
+    margin-bottom: 2rem; 
+    transition: all 0.3s ease; 
+    border-radius: 8px;
 }
+.card:hover, .info-card:hover { box-shadow: 0 8px 15px var(--shadow-hover); transform: translateY(-1px); }
 
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
+/* Tables */
+.table { background-color: var(--bg-secondary); color: var(--text-primary); }
+.table th { background-color: var(--primary-color); color: var(--text-inverse); border-top: none; font-weight: 600; }
+
+/* Forms */
+.form-control { 
+    background-color: var(--bg-secondary); 
+    border-color: var(--border-color); 
+    color: var(--text-primary); 
+    transition: all 0.3s ease; 
 }
-
-.alert {
-    border-radius: 0.5rem;
+.form-control:focus { 
+    background-color: var(--bg-secondary); 
+    border-color: var(--primary-color); 
+    box-shadow: 0 0 0 0.2rem rgba(11, 22, 42, 0.25); 
+    color: var(--text-primary); 
 }
+.form-label { color: var(--text-primary); font-weight: 600; }
+::placeholder { color: var(--text-secondary) !important; opacity: 0.7; }
 
-.table th {
-    background-color: #f8f9fa;
-    border-top: none;
-    font-weight: 600;
+/* Theme Toggle - Fixed Bottom Right */
+.theme-toggle-container {
+    position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+    background: var(--bg-secondary); border: 1px solid var(--border-color);
+    border-radius: 25px; padding: 12px 20px; box-shadow: var(--shadow);
+    backdrop-filter: blur(10px); transition: all 0.3s ease;
 }
+.theme-toggle-container:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.theme-toggle-wrapper { display: flex; align-items: center; gap: 12px; }
+.theme-label { color: var(--text-primary); font-size: 14px; font-weight: 500; user-select: none; }
 
-.table-success {
-    background-color: #d4edda !important;
+/* Toggle Switch */
+.theme-switch { position: relative; display: inline-block; width: 50px; height: 24px; margin: 0; }
+.theme-switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc; transition: 0.3s; border-radius: 24px;
 }
-
-#timer {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #856404;
+.slider:before {
+    position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+    background-color: white; transition: 0.3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
-
-.countdown-expired {
-    color: #dc3545 !important;
-    font-weight: bold;
-}
-
+input:checked + .slider { background-color: var(--bears-orange); }
+input:focus + .slider { box-shadow: 0 0 0 3px rgba(200, 56, 3, 0.3); }
+input:checked + .slider:before { transform: translateX(26px); }
+[data-theme="dark"] .slider { background-color: #555; }
+[data-theme="dark"] input:checked + .slider { background-color: var(--bears-light-orange); }
+/* Responsive Design */
 @media (max-width: 768px) {
-    .container {
-        padding: 0 15px;
-    }
-    
-    #timer {
-        font-size: 1.5rem;
-    }
-    
-    .table-responsive {
+    .container { padding: 0 15px; }
+    .theme-toggle-container { bottom: 15px; right: 15px; padding: 10px 16px; }
+    .theme-label { font-size: 12px; }
+    .theme-switch { width: 44px; height: 22px; }
+    .slider:before { height: 16px; width: 16px; }
+    input:checked + .slider:before { transform: translateX(22px); }
+    #timer { font-size: 1.5rem; }
+    .table-responsive { font-size: 0.9rem; }
+    .snake-draft-grid { padding: 10px; }
+    .draft-pick-box { padding: 6px 2px; font-size: 0.8rem; }
+}
+
+/* Draft Board & Positions */
+.draft-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-bottom: 20px; }
+@media (min-width: 768px) { .draft-board { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; } }
+.draft-position {
+    border: 2px solid var(--border-color); border-radius: 8px; padding: 12px 8px;
+    text-align: center; transition: all 0.3s ease; min-height: 80px; display: flex;
+    flex-direction: column; justify-content: center; background: none;
+}
+@media (min-width: 768px) { .draft-position { padding: 15px; min-height: 100px; } }
+.draft-position.available { border-color: var(--bears-orange); background-color: var(--bg-secondary); cursor: pointer; }
+.draft-position.available:hover { background-color: var(--bg-accent); transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.draft-position.taken { border-color: var(--border-color); background-color: var(--bg-accent); }
+.position-number { font-size: 20px; font-weight: bold; color: var(--text-primary); }
+@media (min-width: 768px) { .position-number { font-size: 24px; } }
+.player-name { font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.2; }
+@media (min-width: 768px) { .player-name { font-size: 14px; margin-top: 5px; } }
+
+/* Snake Draft Visualization */
+.snake-draft-grid {
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    background-color: var(--bg-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.draft-header-spacer {
+    width: 60px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.draft-header-title {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    background-color: var(--bears-navy);
+    color: var(--text-inverse);
+    border-radius: 6px;
+    margin: 0 2px;
+    font-weight: bold;
+}
+
+.draft-header-position {
+    width: 60px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--bears-navy);
+    padding: 8px 4px;
+}
+
+.draft-position-container {
+    flex: 1;
+    margin: 0 2px;
+}
+
+.draft-pick-box {
+    background-color: var(--bg-primary);
+    border: 2px solid var(--bears-navy);
+    border-radius: 6px;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    margin: 1px 0;
+}
+
+.draft-pick-box:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--bears-orange);
+}
+
+/* Snake draft pattern styling */
+.draft-pick-box.position-1 {
+    background-color: var(--bears-orange);
+    color: var(--text-inverse);
+    border-color: var(--bears-light-orange);
+}
+
+.draft-pick-box.position-last {
+    background-color: var(--bears-light-blue);
+    color: var(--text-inverse);
+    border-color: var(--bears-navy);
+}
+
+.draft-pick-box.position-middle {
+    background-color: var(--bears-light-blue);
+    color: var(--text-inverse);
+    border-color: var(--bears-navy);
+}
+
+.draft-pick-box.reverse-round {
+    background: linear-gradient(135deg, var(--bears-light-blue) 0%, var(--bears-darker-blue) 100%);
+    color: var(--text-inverse);
+    border-color: var(--bears-orange);
+}
+
+/* Responsive adjustments for snake draft */
+@media (max-width: 768px) {
+    .snake-draft-grid {
+        padding: 15px;
         font-size: 0.9rem;
     }
+    
+    .draft-header-title,
+    .draft-header-position {
+        font-size: 0.8rem;
+        padding: 6px 4px;
+    }
+    
+    .draft-pick-box {
+        padding: 8px 4px;
+        font-size: 0.85rem;
+    }
+    
+    .draft-header-spacer {
+        width: 45px;
+    }
+    
+    .draft-header-position {
+        width: 45px;
+    }
 }
+.available-text { font-size: 10px; color: var(--bears-orange); margin-top: 4px; }
+@media (min-width: 768px) { .available-text { font-size: 12px; margin-top: 5px; } }
+.pick-pattern { font-size: 9px; color: var(--text-secondary); margin-top: 2px; font-weight: normal; }
+@media (min-width: 768px) { .pick-pattern { font-size: 11px; margin-top: 3px; } }
+
+/* Consolidated Bears-Themed Cards */
+.info-card, .submissions-card {
+    background-color: var(--bg-secondary); border: 1px solid var(--bears-navy);
+    border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;
+    box-shadow: var(--shadow); transition: all 0.3s ease;
+}
+.info-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); border-color: var(--bears-orange); }
+
+/* Status-specific card styling */
+.info-card.status-success { border-color: var(--bears-orange); }
+.info-card.status-danger { border-color: #dc3545; }
+.info-card.status-primary { border-color: var(--bears-orange); }
+
+.info-card-header, .submissions-card-header {
+    background-color: var(--bears-navy); color: white; padding: 1rem 1.5rem;
+    margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 8px 8px 0 0;
+    border-bottom: 2px solid var(--bears-orange);
+}
+.info-card-title { color: white; font-weight: 600; font-size: 1.25rem; margin-bottom: 0.5rem; }
+.info-card-subtitle { color: var(--bears-light-orange); font-size: 0.9rem; margin-bottom: 0; }
+
+.status-card { background-color: var(--bg-secondary); border: 2px solid var(--bears-navy); border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; box-shadow: var(--shadow); }
+.status-card.success { border-color: var(--bears-orange); }
+.status-card.danger { border-color: #dc3545; }
+.status-card.primary { border-color: var(--bears-orange); }
+.game-example-card { background-color: var(--bg-accent); border: 2px solid var(--bears-light-blue); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+.game-example-title { color: var(--bears-navy); font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--bears-orange); }
+.strategy-card { background-color: var(--bears-navy); border: 2px solid var(--bears-orange); border-radius: 8px; padding: 1.25rem; margin-top: 1rem; color: white; }
+.strategy-card-title { color: var(--bears-light-orange); font-weight: 600; font-size: 1rem; margin-bottom: 0.75rem; }
+.strategy-card .btn { background-color: var(--bears-orange); border-color: var(--bears-orange); color: white; }
+.strategy-card .btn:hover { background-color: var(--bears-light-orange); border-color: var(--bears-light-orange); color: white; }
