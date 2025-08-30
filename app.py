@@ -199,25 +199,25 @@ def get_backup_list():
     """Get list of available backups with metadata"""
     try:
         ensure_backup_directory()
-        backup_files = glob.glob(os.path.join(BACKUP_DIR, "backup_*.db"))
+        backup_files = glob.glob(os.path.join(BACKUP_DIR, "backup_*.db")) + glob.glob(os.path.join(BACKUP_DIR, "backup_*.json"))
         backups = []
-        
+
         for backup_file in sorted(backup_files, key=os.path.getctime, reverse=True):
             filename = os.path.basename(backup_file)
-            # Parse filename: backup_YYYYMMDD_HHMMSS_reason.db
-            parts = filename.replace('.db', '').split('_')
+            # Parse filename: backup_YYYYMMDD_HHMMSS_reason.db/json
+            parts = filename.replace('.db', '').replace('.json', '').split('_')
             if len(parts) >= 3:
                 date_str = parts[1]
                 time_str = parts[2]
                 reason = '_'.join(parts[3:]) if len(parts) > 3 else 'manual'
-                
+
                 # Format display date
                 try:
                     backup_datetime = datetime.strptime(f"{date_str}_{time_str}", "%Y%m%d_%H%M%S")
                     display_date = backup_datetime.strftime("%Y-%m-%d %H:%M:%S")
                 except:
                     display_date = "Unknown"
-                
+
                 backups.append({
                     'filename': filename,
                     'display_date': display_date,
@@ -225,7 +225,7 @@ def get_backup_list():
                     'size': os.path.getsize(backup_file),
                     'path': backup_file
                 })
-        
+
         return backups
     except Exception as e:
         print(f"Failed to get backup list: {str(e)}")
