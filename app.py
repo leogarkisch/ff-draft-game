@@ -489,7 +489,7 @@ def results():
     db.session.commit()
     
     return render_template('results.html', players=players_ranked, winner=winner, target=target, average=average, 
-                         draft_order=draft_order, draft_positions_selected=draft_positions_selected, game_state=game_state)
+                         draft_order=draft_order, draft_positions_selected=draft_positions_selected, game_state=game_state, pytz=pytz)
 
 @app.route('/admin')
 def admin():
