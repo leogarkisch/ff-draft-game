@@ -2,6 +2,6 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "python wsgi.py"
+startCommand = "gunicorn --bind 0.0.0.0:$PORT wsgi:app"
 healthcheckPath = "/"
 healthcheckTimeout = 100
