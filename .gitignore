@@ -26,7 +26,7 @@ env/
 ENV/
 
 # Database
-*.db
+# *.db
 
 # Development/Sample Data
 # (dev/ is now tracked for deployment scripts)
