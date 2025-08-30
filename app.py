@@ -354,7 +354,8 @@ def index():
                          league_members=league_members,
                          submissions_open=submissions_open,
                          deadline_str=deadline_str,
-                         deadline_dt=deadline_dt)
+                         deadline_dt=deadline_dt,
+                         pytz=pytz)
 
 @app.route('/snake-draft')
 def snake_draft():
