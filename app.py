@@ -199,13 +199,13 @@ def get_backup_list():
     """Get list of available backups with metadata"""
     try:
         ensure_backup_directory()
-        backup_files = glob.glob(os.path.join(BACKUP_DIR, "backup_*.db")) + glob.glob(os.path.join(BACKUP_DIR, "backup_*.json"))
+        backup_files = glob.glob(os.path.join(BACKUP_DIR, "backup_*.db"))
         backups = []
 
         for backup_file in sorted(backup_files, key=os.path.getctime, reverse=True):
             filename = os.path.basename(backup_file)
-            # Parse filename: backup_YYYYMMDD_HHMMSS_reason.db/json
-            parts = filename.replace('.db', '').replace('.json', '').split('_')
+            # Parse filename: backup_YYYYMMDD_HHMMSS_reason.db
+            parts = filename.replace('.db', '').split('_')
             if len(parts) >= 3:
                 date_str = parts[1]
                 time_str = parts[2]

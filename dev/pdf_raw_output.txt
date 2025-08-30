@@ -1,0 +1,36 @@
+--- Page 1 ---
+Draft Order Game
+Admin
+Game Results
+Winner: Bailey
+Winning guess: 274
+Target number: 267.37 (2/3 × 401.05)
+Difference: 6.63
+Next Step: Draft Position Selection
+Bailey gets to pick their draft position first!
+Then everyone else will pick in order of how close they were to the target.
+All Submissions:
+Place Name Guess Distance from Target Submitted
+1st Bailey 274 6.63 08/29 04:13 AM
+2nd Elliot 279 11.63 08/29 02:34 AM
+3rd Hillel 225 42.37 08/29 08:35 PM
+4th Lily 222 45.37 08/29 08:42 PM
+5th Dana/Tony 220 47.37 08/29 02:37 AM
+6th Kyle 111 156.37 08/29 05:11 AM
+7th Keegan 432 164.63 08/29 05:51 PM
+8th Alex 81 186.37 08/29 08:00 PM
+9th Leo 49 218.37 08/29 01:57 AM
+10th Nikhil 492 224.63 08/29 09:09 PM
+11th Joseph 499 231.63 08/29 02:34 AM
+12th Bayron 34 233.37 08/29 06:38 PM
+13th Austin 0 267.37 08/29 03:21 AM
+14th Lauren 555 287.63 08/29 02:01 AM
+15th Pratika 620 352.63 08/29 02:48 PM
+16th Akash 626 358.63 08/29 09:06 PM
+17th Charlie 666 398.63 08/29 08:55 PM
+18th Jeff 783 515.63 08/29 08:56 PM
+19th River 854 586.63 08/29 10:04 AM
+20th Nick 999 731.63 08/29 09:14 PM
+© 2025 Leo Garkisch. All rights reserved.
+
+Extracted 0 submissions:
