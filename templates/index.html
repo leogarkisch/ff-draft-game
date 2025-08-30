@@ -156,7 +156,7 @@
                                 {% for player in players %}
                                 <tr>
                                     <td>{{ player.name }}</td>
-                                    <td>{{ player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                                    <td>{{ player.timestamp.replace(tzinfo=pytz.UTC).astimezone(pytz.timezone('US/Eastern')).strftime('%m/%d %I:%M %p') }} ET</td>
                                     <td>
                                         <span class="badge" style="background-color: var(--bears-orange); color: white;">✓ Submitted</span>
                                     </td>

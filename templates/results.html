@@ -108,7 +108,7 @@
                                     {% endif %}
                                 </td>
                                 {% endif %}
-                                <td>{{ player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                                <td>{{ player.timestamp.replace(tzinfo=pytz.UTC).astimezone(pytz.timezone('US/Eastern')).strftime('%m/%d %I:%M %p') }} ET</td>
                             </tr>
                             {% endfor %}
                         </tbody>

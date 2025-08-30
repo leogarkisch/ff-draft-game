@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-08-29T20:23:18.725892",
+  "players": [],
+  "deleted_players": [],
+  "game_state": {
+    "id": 1,
+    "phase": "submission",
+    "winner_id": null,
+    "target_number": null,
+    "average_guess": null,
+    "num_teams": 20
+  }
+}

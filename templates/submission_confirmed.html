@@ -30,7 +30,7 @@
                                 <p class="card-text">
                                     <strong>Name:</strong> {{ player.name }}<br>
                                     <strong>Guess:</strong> {{ player.guess }}<br>
-                                    <strong>Submitted:</strong> {{ player.timestamp.strftime('%I:%M %p ET') }}
+                                    <strong>Submitted:</strong> {{ player.timestamp.replace(tzinfo=pytz.UTC).astimezone(pytz.timezone('US/Eastern')).strftime('%I:%M %p') }} ET
                                 </p>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                                                     <span class="badge ms-1" style="background-color: var(--bears-orange); color: white;">You</span>
                                                     {% endif %}
                                                 </td>
-                                                <td>{{ submission_player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                                                <td>{{ submission_player.timestamp.replace(tzinfo=pytz.UTC).astimezone(pytz.timezone('US/Eastern')).strftime('%m/%d %I:%M %p') }} ET</td>
                                                 <td>
                                                     <span class="badge" style="background-color: var(--bears-orange); color: white;">✓ Submitted</span>
                                                 </td>

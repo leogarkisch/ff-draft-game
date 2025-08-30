@@ -1,51 +1,70 @@
-# Fantasy Football Draft Order Game
+# Fantasy Football Draft Order Game 🏈
 
-A web application that uses the "2/3 of the average" game theory to determine fantasy football draft order.
-
-## How It Works
-
-Players submit numbers between 0-1000, and whoever gets closest to 2/3 of the average wins first pick!
+A Flask web application that uses game theory to determine fantasy football draft order. Players submit number guesses, and the person closest to 2/3 of the average wins first pick!
 
 ## Features
 
-- Real-time submission tracking
-- Admin panel with password protection
-- Mobile-responsive design
-- Supports 3-30 players
-- Turn-based draft position selection
+- **Game Theory Based**: Uses the "2/3 of the average" concept
+- **Chicago Bears Themed**: Navy and orange color scheme throughout
+- **Mobile Responsive**: Works on all devices
+- **Admin Panel**: Manage game phases and view results
+- **Automatic Backups**: Data is automatically backed up
+- **Draft Position Selection**: Winners choose their preferred draft spots
+
+## Quick Start
+
+### Local Development
+```bash
+./run.sh
+```
+This single command handles everything: environment setup, dependencies, database initialization, and starting the app.
+
+### Manual Setup
+```bash
+cd /Users/leo/VSCode/4fun/ff_number
+source venv/bin/activate
+pip install -r requirements.txt
+python init_db.py
+python app.py
+```
+
+## Game Flow
+
+1. **Submission Phase**: Players enter guesses (0-1000)
+2. **Results Phase**: System calculates 2/3 of average
+3. **Selection Phase**: Winners choose draft positions in order
+4. **Completed**: Final draft order is set
+
+## Admin Access
+
+- URL: `/admin/login`
+- Password: `ff2025admin`
+- Features: Game management, backups, phase control
 
 ## Deployment
 
-### Quick Deploy to Render
+Deployed on Railway at: https://ff-draft-game-production.up.railway.app
 
-1. Push this code to GitHub
-2. Connect your GitHub repo to [Render](https://render.com)
-3. Create a new Web Service
-4. Use these settings:
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `python wsgi.py`
-   - **Environment**: Python 3
+### Deploy Updates
+```bash
+railway up
+```
 
-### Environment Variables (Optional)
+## Technology Stack
 
-- `SECRET_KEY`: Set a secure secret key for sessions
+- **Backend**: Flask + SQLAlchemy
+- **Database**: SQLite (local) / PostgreSQL (production)
+- **Frontend**: Bootstrap 5 + Custom CSS
+- **Deployment**: Railway
 
-### Admin Access
+## File Structure
 
-- Password: `ff2025admin`
-- Access admin panel at `/admin`
-
-## Local Development
-
-1. Create virtual environment: `python -m venv venv`
-2. Activate: `source venv/bin/activate` (Mac/Linux) or `venv\Scripts\activate` (Windows)
-3. Install dependencies: `pip install -r requirements.txt`
-4. Initialize database: `python init_db.py`
-5. Run app: `python app.py`
-
-## Game Rules
-
-- Choose a number between 0 and 1000
-- Goal: Get closest to 2/3 of everyone's average
-- Winner picks draft position first
-- Everyone else picks in turn-based order
+```
+├── app.py              # Main Flask application
+├── init_db.py          # Database setup
+├── requirements.txt    # Python dependencies
+├── run.sh             # Local development script
+├── static/            # CSS and JavaScript
+├── templates/         # HTML templates
+└── backups/           # Automatic backups
+```

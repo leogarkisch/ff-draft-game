@@ -8,10 +8,10 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
 
 # Validate we're in the right directory by checking for required files
-if [[ ! -f "app.py" ]] || [[ ! -f "init_db.py" ]] || [[ ! -d "venv" ]]; then
+if [[ ! -f "app.py" ]] || [[ ! -d "venv" ]]; then
     echo "❌ ERROR: Not in the correct directory or missing required files!"
     echo "📁 Current directory: $(pwd)"
-    echo "📋 Required files: app.py, init_db.py, venv/"
+    echo "📋 Required files: app.py, venv/"
     echo "💡 Make sure you're running this script from the ff_number directory"
     echo "💡 Or run: cd /Users/leo/VSCode/4fun/ff_number && ./run.sh"
     exit 1
@@ -31,14 +31,13 @@ source venv/bin/activate
 echo "📦 Installing dependencies..."
 pip install -q flask flask-sqlalchemy pytz
 
-# Initialize database if it doesn't exist, or migrate if it does
+# Initialize database if it doesn't exist
 echo "🗄️ Setting up database..."
-if [ ! -f "my_data.db" ]; then
+if [ ! -f "instance/draft_game.db" ]; then
     echo "Creating new database..."
-    python init_db.py
+    # Database will be auto-created by Flask app
 else
-    echo "Database exists, checking for migrations..."
-    python migrate_db.py
+    echo "Database exists, ready to go..."
 fi
 
 # Start the Flask application

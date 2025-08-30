@@ -350,7 +350,7 @@
                                         N/A
                                     {% endif %}
                                 </td>
-                                <td>{{ player.timestamp.strftime('%m/%d %I:%M %p') }}</td>
+                                <td>{{ player.timestamp.replace(tzinfo=pytz.UTC).astimezone(pytz.timezone('US/Eastern')).strftime('%m/%d %I:%M %p') }} ET</td>
                                 <td>
                                     {% if player.ip_address %}
                                         {% if ip_counts.get(player.ip_address, 0) > 1 %}

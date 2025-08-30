@@ -1,0 +1,194 @@
+{
+  "timestamp": "2025-08-29T20:40:39.690712",
+  "players": [
+    {
+      "id": 1,
+      "name": "Leo",
+      "email": "leo@example.com",
+      "guess": 49,
+      "timestamp": "2025-08-29T01:57:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 2,
+      "name": "Lauren",
+      "email": "lauren@example.com",
+      "guess": 555,
+      "timestamp": "2025-08-29T02:01:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 3,
+      "name": "Elliot",
+      "email": "elliot@example.com",
+      "guess": 279,
+      "timestamp": "2025-08-29T02:34:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 4,
+      "name": "Joseph",
+      "email": "joseph@example.com",
+      "guess": 499,
+      "timestamp": "2025-08-29T02:34:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 5,
+      "name": "Dana/Tony",
+      "email": "dana/tony@example.com",
+      "guess": 220,
+      "timestamp": "2025-08-29T02:37:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 6,
+      "name": "Austin",
+      "email": "austin@example.com",
+      "guess": 0,
+      "timestamp": "2025-08-29T03:21:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 7,
+      "name": "Bailey",
+      "email": "bailey@example.com",
+      "guess": 274,
+      "timestamp": "2025-08-29T04:13:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 8,
+      "name": "Kyle",
+      "email": "kyle@example.com",
+      "guess": 111,
+      "timestamp": "2025-08-29T05:11:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 9,
+      "name": "River",
+      "email": "river@example.com",
+      "guess": 854,
+      "timestamp": "2025-08-29T10:04:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 10,
+      "name": "Pratika",
+      "email": "pratika@example.com",
+      "guess": 620,
+      "timestamp": "2025-08-29T14:48:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 11,
+      "name": "Keegan",
+      "email": "keegan@example.com",
+      "guess": 432,
+      "timestamp": "2025-08-29T17:51:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 12,
+      "name": "Bayron",
+      "email": "bayron@example.com",
+      "guess": 34,
+      "timestamp": "2025-08-29T18:38:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 13,
+      "name": "Alex",
+      "email": "alex@example.com",
+      "guess": 81,
+      "timestamp": "2025-08-29T20:00:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 14,
+      "name": "Hillel",
+      "email": "hillel@example.com",
+      "guess": 225,
+      "timestamp": "2025-08-29T20:35:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 15,
+      "name": "Lily",
+      "email": "lily@example.com",
+      "guess": 222,
+      "timestamp": "2025-08-29T20:42:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 16,
+      "name": "Charlie",
+      "email": "charlie@example.com",
+      "guess": 666,
+      "timestamp": "2025-08-29T20:55:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 17,
+      "name": "Jeff",
+      "email": "jeff@example.com",
+      "guess": 783,
+      "timestamp": "2025-08-29T20:56:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 18,
+      "name": "Akash",
+      "email": "akash@example.com",
+      "guess": 626,
+      "timestamp": "2025-08-29T21:06:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 19,
+      "name": "Nikhil",
+      "email": "nikhil@example.com",
+      "guess": 492,
+      "timestamp": "2025-08-29T21:09:00",
+      "draft_position": null,
+      "ip_address": null
+    },
+    {
+      "id": 20,
+      "name": "Nick",
+      "email": "nick@example.com",
+      "guess": 999,
+      "timestamp": "2025-08-29T21:14:00",
+      "draft_position": null,
+      "ip_address": null
+    }
+  ],
+  "deleted_players": [],
+  "game_state": {
+    "id": 1,
+    "phase": "submission",
+    "winner_id": null,
+    "target_number": null,
+    "average_guess": null,
+    "num_teams": 20
+  }
+}

@@ -28,6 +28,9 @@ ENV/
 # Database
 *.db
 
+# Development/Sample Data
+dev/
+
 # IDE
 .vscode/
 .idea/
