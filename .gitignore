@@ -29,7 +29,7 @@ ENV/
 *.db
 
 # Development/Sample Data
-dev/
+# (dev/ is now tracked for deployment scripts)
 
 # IDE
 .vscode/
